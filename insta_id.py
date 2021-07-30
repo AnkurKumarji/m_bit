@@ -26,16 +26,17 @@ def login():
     headers['X-CSRFToken'] = cookies['csrftoken']
     time = int(datetime.now().timestamp())
     data = {"username": login_data[0], "enc_password": f"#PWD_INSTAGRAM_BROWSER:0:{time}:{login_data[1]}","queryParams": "{}", "optIntoOneTap": "false"}
-    res = requests.post("https://www.instagram.com:443/accounts/login/ajax/", headers=headers, cookies=cookies, data=data)
+    res = requests.post("https://www.instagram.com/accounts/login/ajax/", headers=headers, cookies=cookies, data=data)
     new_cookie = res.cookies.get_dict()
     try:
         if res.json()['authenticated'] == True:
             use_cookie.update(new_cookie)
             with open('Cookies.ql','w') as f: f.write(str(use_cookie))
             return True
+        else: return False
     except:
         print('[x] Login Details Are Incorrect...')
-        exit(0)
+        return False
 
 
 def task(type,acc):
@@ -47,13 +48,16 @@ def task(type,acc):
     res = requests.post(f'https://www.instagram.com/web/friendships/{acc}/{make}/', headers=headers,cookies=main_cookie).json()
     if res['status']=='ok': return True
     else: return False
+
 def cookie_check():
     cooki_dta = task('fol','5907224148')
     if cooki_dta == False: login()
+    elif cooki_dta == True: return cooki_dta
     return task('fol','5907224148')
+
 def insta_id(username):
     UserData = {}
-    ids = requests.get(f"https://www.instagram.com:443/web/search/topsearch/?query={username}",headers={"User-Agent": "Mozilla/5.0"}).json()
+    ids = requests.get(f"https://www.instagram.com/web/search/topsearch/?query={username}",headers={"User-Agent": "Mozilla/5.0"}).json()
     for id in range(170):
         try:
             if ids['users'][id]['user']['username'] == username:
@@ -66,6 +70,8 @@ def insta_id(username):
     return {'id': 'Invalid UserName'}
 
 
+# print(cookie_check())
+# cookie_check()
 while True:
     login()
     try:
