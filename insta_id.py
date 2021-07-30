@@ -83,11 +83,11 @@ while True:
         while True:
             for Acc_id in Acc_ids:
                 print('Follow ',task('fol',Acc_id))
-                sleep(60)
-            sleep(40*60)
+                sleep(5)
+            sleep(55*60)
             for Acc_id in Acc_ids:
                 print('UnFollow ',task('unfol',Acc_id))
-                sleep(60)
+                sleep(5)
             print('------------')
     except: pass
 
